@@ -2,7 +2,11 @@
 resource "aws_internet_gateway" "gw" {
     vpc_id = aws_vpc.main.id
     
-    tags = var.tags
+    tags = {
+        Name = "${var.tags.Owner} ${var.tags.Project} IGW"
+        Owner = "${var.tags.Owner}"
+        Project = "${var.tags.Project}"
+    }
 }
 
 # Nat Gateway setup and route configuration for the private network
@@ -11,7 +15,9 @@ resource "aws_eip" "natgw" {
     vpc = true
 
     tags = {
-      Name = "${var.tags.Name} ${count.index}"
+        Name = "${var.tags.Owner} ${var.tags.Project} NGW EIP ${count.index}",
+        Owner = "${var.tags.Owner}"
+        Project = "${var.tags.Project}"
     }
 }
 
@@ -21,6 +27,8 @@ resource "aws_nat_gateway" "gw" {
     subnet_id     = aws_subnet.public[count.index].id
 
     tags = {
-        Name = "${var.tags.Name} NGW${count.index}"
+        Name = "${var.tags.Owner} ${var.tags.Project} NGW ${count.index}"
+        Owner = "${var.tags.Owner}"
+        Project = "${var.tags.Project}"
     }
 }

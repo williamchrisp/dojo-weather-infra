@@ -8,7 +8,11 @@ resource "aws_vpc" "main" {
     cidr_block = var.vpc_cidr
     instance_tenancy = "default"
 
-    tags = var.tags
+    tags = {
+        Name = "${var.tags.Owner} ${var.tags.Project}"
+        Owner = "${var.tags.Owner}"
+        Project = "${var.tags.Project}"
+        }
 }
 
 # Subnet configuration
@@ -19,7 +23,9 @@ resource "aws_subnet" "public" {
     availability_zone = data.aws_availability_zones.available.names[count.index]
     
     tags = {
-        Name = "${var.tags.Name} Public ${count.index}"
+        Name = "${var.tags.Owner} ${var.tags.Project} Public ${count.index}"
+        Owner = "${var.tags.Owner}"
+        Project = "${var.tags.Project}"
         }
 }
 
@@ -30,7 +36,9 @@ resource "aws_subnet" "private" {
     availability_zone = data.aws_availability_zones.available.names[count.index]
 
     tags = {
-        Name = "${var.tags.Name} Private ${count.index}"
+        Name = "${var.tags.Owner} ${var.tags.Project} Private ${count.index}"
+        Owner = "${var.tags.Owner}"
+        Project = "${var.tags.Project}"
         }
 }
 
@@ -43,7 +51,9 @@ resource "aws_route_table" "public" {
         gateway_id = aws_internet_gateway.gw.id
     }
     tags = {
-        Name = "${var.tags.Name} Public ${count.index}"
+        Name = "${var.tags.Owner} ${var.tags.Project} Public ${count.index}"
+        Owner = "${var.tags.Owner}"
+        Project = "${var.tags.Project}"
     }
 }
 
@@ -62,7 +72,9 @@ resource "aws_route_table" "private" {
     }
     
     tags = {
-        Name = "${var.tags.Name} Private ${count.index}"
+        Name = "${var.tags.Owner} ${var.tags.Project} Private ${count.index}"
+        Owner = "${var.tags.Owner}"
+        Project = "${var.tags.Project}"
     }
 }
 

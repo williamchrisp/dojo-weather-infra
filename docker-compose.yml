@@ -1,11 +1,11 @@
 version: '3'
 services:
   tf:
-    build: ./
+    build: ./infrastructure
     image: contino/terraform
     volumes:
       - type: bind
-        source: .
+        source: ./infrastructure/
         target: /opt/app
     working_dir: /opt/app
     env_file: .env

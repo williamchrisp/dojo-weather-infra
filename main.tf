@@ -14,13 +14,6 @@ module "vpc" {
   tags = var.tags
 }
 
-module "ecs" {
-  source  = "./modules/ecs"
-  ecr_name = var.ecr_name
-
-  tags = var.tags
-}
-
 output "bucket_name" {
   description = "The name of the bucket"
   value       = ["${module.s3_bucket.s3_bucket_name}"]

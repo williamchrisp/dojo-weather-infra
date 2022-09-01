@@ -1,5 +1,3 @@
-# Main Variable
-
 # VPC Variables
 variable "vpc_cidr" {
   type        = string
@@ -24,13 +22,6 @@ variable "bucket" {
   type        = string
   description = "Specifies the name of an S3 Bucket"
   default     = "williamdojoapp"
-}
-
-#ECS Variables
-variable "ecr_name" {
-  type        = string
-  description = "Specifies the repository name"
-  default     = "williamchrisp-node-weather-app"
 }
 
 #Tag Variables

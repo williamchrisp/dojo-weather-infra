@@ -1,12 +1,6 @@
 COMPOSE_RUN_TERRAFORM = docker-compose run --rm tf
 COMPOSE_RUN_BASH = docker-compose run --rm --entrypoint bash tf
 COMPOSE_RUN_AWS = docker-compose run --rm --entrypoint aws tf
-COMPOSE_RUN_APP = docker-compose run --rm -p "8080:3000" app
-COMPOSE_BUILD_APP = docker-compose build app
-DOCKER_TAG_APP = docker tag weather-app:1 ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${REPO_NAME}:1
-DOCKER_PUSH_APP = docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${REPO_NAME}:1
-DOCKER_CLEAN = docker-compose down --remove-orphans && docker image prune -a
-ECR_LOGIN = aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
 
 .PHONY: run_plan
 run_plan: init plan
@@ -49,30 +43,3 @@ destroy_apply:
 .PHONY: list_bucket
 list_bucket: 
 	$(COMPOSE_RUN_AWS) s3 ls
-
-.PHONY: run_app
-run_app: build run
-
-.PHONY: push_app
-push_app: build tag push
-
-.PHONY: build
-build:
-	$(COMPOSE_BUILD_APP)
-
-.PHONY: tag
-tag:
-	${DOCKER_TAG_APP}
-
-.PHONY: push
-push:
-	${ECR_LOGIN}
-	${DOCKER_PUSH_APP}
-
-.PHONY: run
-run:
-	${COMPOSE_RUN_APP}
-
-.PHONE: clean
-clean:
-	${DOCKER_CLEAN}

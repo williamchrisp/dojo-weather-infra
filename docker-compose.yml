@@ -1,14 +1,11 @@
 version: '3'
 services:
   tf:
-    build: ./infrastructure
+    build: .
     image: contino/terraform
     volumes:
       - type: bind
-        source: ./infrastructure/
+        source: .
         target: /opt/app
     working_dir: /opt/app
-    env_file: ./infrastructure/.env
-  app:
-    build: ./application
-    image: weather-app:1
+    env_file: .env

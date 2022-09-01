@@ -28,9 +28,9 @@ variable "bucket" {
 
 #ECS Variables
 variable "ecr_name" {
-  type = string
+  type        = string
   description = "Specifies the repository name"
-  default = "williamchrisp-node-weather-app"
+  default     = "williamchrisp-node-weather-app"
 }
 
 #Tag Variables
@@ -38,7 +38,7 @@ variable "tags" {
   type        = map(string)
   description = "Use tags to identify project resources"
   default = {
-    Owner = "williamchrisp"
+    Owner   = "williamchrisp"
     Project = "Weather App"
   }
 }

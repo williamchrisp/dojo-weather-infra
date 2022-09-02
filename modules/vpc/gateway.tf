@@ -3,7 +3,7 @@ resource "aws_internet_gateway" "gw" {
     vpc_id = aws_vpc.main.id
     
     tags = {
-        Name = "${var.tags.Owner} ${var.tags.Project} IGW"
+        Name = "${var.tags.Owner}-${var.tags.Project} IGW"
         Owner = "${var.tags.Owner}"
         Project = "${var.tags.Project}"
     }
@@ -15,7 +15,7 @@ resource "aws_eip" "natgw" {
     vpc = true
 
     tags = {
-        Name = "${var.tags.Owner} ${var.tags.Project} NGW EIP ${count.index}",
+        Name = "${var.tags.Owner}-${var.tags.Project} NGW EIP ${count.index}",
         Owner = "${var.tags.Owner}"
         Project = "${var.tags.Project}"
     }
@@ -27,7 +27,7 @@ resource "aws_nat_gateway" "gw" {
     subnet_id     = aws_subnet.public[count.index].id
 
     tags = {
-        Name = "${var.tags.Owner} ${var.tags.Project} NGW ${count.index}"
+        Name = "${var.tags.Owner}-${var.tags.Project} NGW ${count.index}"
         Owner = "${var.tags.Owner}"
         Project = "${var.tags.Project}"
     }

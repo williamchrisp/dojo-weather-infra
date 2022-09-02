@@ -30,6 +30,6 @@ variable "tags" {
   description = "Use tags to identify project resources"
   default = {
     Owner   = "williamchrisp"
-    Project = "Weather App"
+    Project = "node-weather-app"
   }
 }

@@ -7,7 +7,7 @@ variable "vpc_cidr" {
 
 variable "public_subnets" {
   type        = list(any)
-  description = "Specifies the private subnets in a list"
+  description = "Specifies the public subnets in a list"
   default     = ["10.0.0.0/28", "10.0.0.16/28", "10.0.0.32/28"]
 }
 

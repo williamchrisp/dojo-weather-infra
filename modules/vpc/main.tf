@@ -9,7 +9,7 @@ resource "aws_vpc" "main" {
     instance_tenancy = "default"
 
     tags = {
-        Name = "${var.tags.Owner}-${var.tags.Project}"
+        Name = "${var.tags.Owner}-${var.tags.Project}-vpc"
         Owner = "${var.tags.Owner}"
         Project = "${var.tags.Project}"
         }
@@ -23,7 +23,7 @@ resource "aws_subnet" "public" {
     availability_zone = data.aws_availability_zones.available.names[count.index]
     
     tags = {
-        Name = "${var.tags.Owner}-${var.tags.Project} Public ${count.index}"
+        Name = "${var.tags.Owner}-${var.tags.Project}-public-${count.index}"
         Owner = "${var.tags.Owner}"
         Project = "${var.tags.Project}"
         }
@@ -36,7 +36,7 @@ resource "aws_subnet" "private" {
     availability_zone = data.aws_availability_zones.available.names[count.index]
 
     tags = {
-        Name = "${var.tags.Owner}-${var.tags.Project} Private ${count.index}"
+        Name = "${var.tags.Owner}-${var.tags.Project}-private-${count.index}"
         Owner = "${var.tags.Owner}"
         Project = "${var.tags.Project}"
         }
@@ -51,7 +51,7 @@ resource "aws_route_table" "public" {
         gateway_id = aws_internet_gateway.gw.id
     }
     tags = {
-        Name = "${var.tags.Owner}-${var.tags.Project} Public ${count.index}"
+        Name = "${var.tags.Owner}-${var.tags.Project}-public-${count.index}"
         Owner = "${var.tags.Owner}"
         Project = "${var.tags.Project}"
     }
@@ -72,7 +72,7 @@ resource "aws_route_table" "private" {
     }
     
     tags = {
-        Name = "${var.tags.Owner}-${var.tags.Project} Private ${count.index}"
+        Name = "${var.tags.Owner}-${var.tags.Project}-private-${count.index}"
         Owner = "${var.tags.Owner}"
         Project = "${var.tags.Project}"
     }

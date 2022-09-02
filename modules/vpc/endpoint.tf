@@ -7,7 +7,7 @@ resource "aws_vpc_endpoint" "s3" {
     service_name = "com.amazonaws.${data.aws_region.current.name}.s3"
 
     tags = {
-        Name = "${var.tags.Owner}-${var.tags.Project} S3 Endpoint",
+        Name = "${var.tags.Owner}-${var.tags.Project}-s3-endpoint",
         Owner = "${var.tags.Owner}"
         Project = "${var.tags.Project}"
     }

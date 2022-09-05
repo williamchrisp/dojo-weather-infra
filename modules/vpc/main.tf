@@ -26,6 +26,7 @@ resource "aws_subnet" "public" {
         Name = "${var.tags.Owner}-${var.tags.Project}-public-${count.index}"
         Owner = "${var.tags.Owner}"
         Project = "${var.tags.Project}"
+        Tier = "Public"
         }
 }
 
@@ -39,6 +40,7 @@ resource "aws_subnet" "private" {
         Name = "${var.tags.Owner}-${var.tags.Project}-private-${count.index}"
         Owner = "${var.tags.Owner}"
         Project = "${var.tags.Project}"
+        Tier = "Private"
         }
 }
 

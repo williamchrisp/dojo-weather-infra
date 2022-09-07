@@ -6,11 +6,12 @@ resource "aws_vpc_endpoint" "s3" {
     vpc_id       = aws_vpc.main.id
     service_name = "com.amazonaws.${data.aws_region.current.name}.s3"
 
-    tags = {
-        Name = "${var.tags.Owner}-${var.tags.Project}-s3-endpoint",
-        Owner = "${var.tags.Owner}"
-        Project = "${var.tags.Project}"
-    }
+    tags = merge(
+        var.tags,
+        {
+            Name = "${var.tags.Owner}-${var.tags.Project}-s3-endpoint",
+        },
+    )
 }
 
 resource "aws_vpc_endpoint_route_table_association" "s3" {

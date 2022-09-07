@@ -1,12 +1,13 @@
 # Internet Gateway setup and route configuration for the public subnet
 resource "aws_internet_gateway" "gw" {
     vpc_id = aws_vpc.main.id
-    
-    tags = {
-        Name = "${var.tags.Owner}-${var.tags.Project}-igw"
-        Owner = "${var.tags.Owner}"
-        Project = "${var.tags.Project}"
-    }
+
+    tags = merge(
+        var.tags,
+        {
+            Name = "${var.tags.Owner}-${var.tags.Project}-vpc"
+        },
+    )
 }
 
 # Nat Gateway setup and route configuration for the private network
@@ -14,11 +15,12 @@ resource "aws_eip" "natgw" {
     count = length(aws_subnet.private)
     vpc = true
 
-    tags = {
-        Name = "${var.tags.Owner}-${var.tags.Project}-ngw-eip-${count.index}",
-        Owner = "${var.tags.Owner}"
-        Project = "${var.tags.Project}"
-    }
+    tags = merge(
+        var.tags,
+        {
+            Name = "${var.tags.Owner}-${var.tags.Project}-ngw-eip-${count.index}",
+        },
+    )
 }
 
 resource "aws_nat_gateway" "gw" {
@@ -26,9 +28,10 @@ resource "aws_nat_gateway" "gw" {
     allocation_id = aws_eip.natgw[count.index].id
     subnet_id     = aws_subnet.public[count.index].id
 
-    tags = {
-        Name = "${var.tags.Owner}-${var.tags.Project}-ngw-${count.index}"
-        Owner = "${var.tags.Owner}"
-        Project = "${var.tags.Project}"
-    }
+    tags = merge(
+        var.tags,
+        {
+            Name = "${var.tags.Owner}-${var.tags.Project}-ngw-${count.index}"
+        },
+    )
 }

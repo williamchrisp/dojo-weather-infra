@@ -1,16 +1,8 @@
-# VPC Variables
-variable "vpc_cidr" {
-  default = ""
-}
+# Root variables passed in
+variable "vpc_cidr" {}
 
-variable "public_subnets" {
-  default = []
-}
+variable "public_subnets" {}
 
-variable "private_subnets" {
-  default = []
-}
+variable "private_subnets" {}
 
-variable "tags" {
-  default     = {}
-}
+variable "tags" {}

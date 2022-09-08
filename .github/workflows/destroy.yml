@@ -44,9 +44,9 @@ jobs:
     - name: Initiate destroy in app repo
       run: |
         curl -X POST \
-        -H "Authorization: Bearer ${{secrets.ACCESS_TOKEN}}" \
-        -H "Accept: application/vnd.github.v3+json" \
-        https://api.github.com/repos/williamchrisp/dojo-weather-app/dispatches \                            
-        -d '{"event_type":"destroy","client_payload":{}}'
+          -H "Accept: application/vnd.github.v3+json" \
+          -H "Authorization: Bearer ${{ secrets.ACCESS_TOKEN }}" \
+          https://api.github.com/repos/williamchrisp/dojo-weather-app/dispatches \                            
+          -d '{"event_type":"destroy","client_payload":{"destroy":true}}'
     - name: echo destroy initiated for app
       run: echo "Initiated destroy workflow here - https://github.com/williamchrisp/dojo-weather-app"

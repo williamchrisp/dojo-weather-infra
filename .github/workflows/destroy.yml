@@ -43,11 +43,10 @@ jobs:
     - uses: actions/checkout@v2
     - name: Initiate destroy in app repo
       run: |
-        curl \
-        -X POST \
-        -H "Accept: application/vnd.github+json" \ 
+        curl -X POST \
         -H "Authorization: Bearer ${{secrets.ACCESS_TOKEN}}" \
-        https://api.github.com/repos/williamchrisp/dojo-weather-app/dispatches \
-        -d '{"event_type":"destroy","client_payload":""'
+        -H "Accept: application/vnd.github.v3+json" \
+        https://api.github.com/repos/williamchrisp/dojo-weather-app/dispatches \                            
+        -d '{"event_type":"destroy","client_payload":{}}'
     - name: echo destroy initiated for app
       run: echo "Initiated destroy workflow here - https://github.com/williamchrisp/dojo-weather-app"

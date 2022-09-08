@@ -36,15 +36,16 @@ jobs:
       run: make run_apply
 
   deploy_app:
+    needs: terraform_apply
     runs-on: ubuntu-latest
     if: ${{ inputs.build_app }}
     steps:
-      - name: Initiate build in app repo
-      - run: |
-          curl -X POST \
-          -H "Authorization: Bearer ${{secrets.ACCESS_TOKEN}}" \
-          -H "Accept: application/vnd.github.v3+json" \
-          https://api.github.com/repos/williamchrisp/dojo-weather-app/actions/workflows/build.yml/dispatches \
-          -d '{"ref": "main"}'
-      - run: echo "Initiated build workflow here - https://github.com/williamchrisp/dojo-weather-app"
+    - name: Initiate build in app repo
+    - run: |
+        curl -X POST \
+        -H "Authorization: Bearer ${{secrets.ACCESS_TOKEN}}" \
+        -H "Accept: application/vnd.github.v3+json" \
+        https://api.github.com/repos/williamchrisp/dojo-weather-app/actions/workflows/build.yml/dispatches \
+        -d '{"ref": "main"}'
+    - run: echo "Initiated build workflow here - https://github.com/williamchrisp/dojo-weather-app"
   

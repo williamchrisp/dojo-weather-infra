@@ -42,11 +42,12 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Initiate build in app repo
-    - run: |
+      run: |
         curl -X POST \
         -H "Authorization: Bearer ${{secrets.ACCESS_TOKEN}}" \
         -H "Accept: application/vnd.github.v3+json" \
         https://api.github.com/repos/williamchrisp/dojo-weather-app/actions/workflows/build.yml/dispatches \
         -d '{"ref": "main"}'
-    - run: echo "Initiated build workflow here - https://github.com/williamchrisp/dojo-weather-app"
+    - name: echo build initiated for app
+      run: echo "Initiated build workflow here - https://github.com/williamchrisp/dojo-weather-app"
   

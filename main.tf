@@ -23,3 +23,8 @@ output "bucket_name_arn" {
   description = "The name of the bucket"
   value       = ["${module.s3_bucket.s3_bucket_name_arn}"]
 }
+
+output "vpc_id" {
+    description = "VPC ID"
+    value = aws_vpc.main.id
+}

@@ -7,31 +7,23 @@ https://github.com/williamchrisp/dojo-weather-app
 
 It includes and supports the following functionality:
 * Dockerfile and docker-compose configuration for 3M based deployments
-* Makefile providing basic Terraform deployment functionality
-* GitHub workflows for supporting basic Terraform deploy and destroy functionality
+* Makefile providing Terraform deployment functionality
+* GitHub workflows for supporting Terraform deploy and destroy functionality
 
 <br> 
 
-## Getting Started
-This repository will need to be public if you are creating it in your personal GitHub account in order to support approval gates in GitHub actions. Configure the following to get started:
-* Clone your repository locally. It should have a branch named `master`.
-* Create a `destroy` branch in your GitHub repo. This will be used to trigger Terraform Destroy workflow during pull request from `master->destroy`.
-* Create an environment in your repository named `approval` to support GitHub Workflows, selecting `required reviewers` and adding yourself as an approver.
-* Update the `key` value in the `meta.tf` file replacing `<username>` with your username for the name of the Terraform state file.
-* Update the default bucket name in the `variable.tf` file to a something globally unique.
-* Create GitHub Secrets in your repository for `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY` and `AWS_SESSION_TOKEN` if using temporary credentials.
-* Push local changes to the GitHub repos master branch, which should trigger the Github deploy workflow, and deploy the s3 bucket. Remember to review tf plan and approve apply.
-* Create a pull request to merge master changes to destroy branch. Merge changes to trigger the Github destroy workflow deleting the s3 bucket. Remember to review the tf speculative plan and approve destroy.
-* You can run the build locally by using the make commands below within the repo clone. If you want to check the bucket creation you can use `make list_bucket`.
 
-
-Keep reading for in-depth details.
-
-<br> 
-
-## 3 Musketeers
+## Running Locally
 
 The provided `makefile`, `dockerfile` , and `docker-compose.yml` files work together to create a docker container which is used to run Terraform deployments and other supported commands. It expects AWS account credentials to be passed as environment variables.
+
+Please ensure the following variables are exported locally.
+if you are not using temporary credentials you do not require AWS_SESSION_TOKEN
+```
+export AWS_ACCESS_KEY_ID=
+export AWS_SECRET_ACCESS_KEY=
+export AWS_SESSION_TOKEN=
+```
 
 To run a simple aws command, ensure you have set your *__aws temporary credentials__* in your local environment and run the following
 

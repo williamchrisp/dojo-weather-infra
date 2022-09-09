@@ -1,0 +1,21 @@
+name: deploy
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'modules/**'
+      - '**.tf'
+jobs:
+  deploy_app:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Initiate build in app repo
+      run: >
+        curl -X POST
+        -H "Accept: application/vnd.github.v3+json"
+        -H "Authorization: Bearer ${{ secrets.ACCESS_TOKEN }}"
+        https://api.github.com/repos/williamchrisp/dojo-weather-app/dispatches
+        -d '{"event_type":"deploy","client_payload":{"deploy":true}}'
+  

@@ -6,9 +6,9 @@ on:
   workflow_dispatch:
     inputs:
       destroy_app:
-        description: "Destroy the Weather app terraform stack aswell."
+        description: "Destroy the Weather app (Recommended - App will stop working either way!)"
         required: true
-        default: false
+        default: true
         type: boolean
 env:
   APP_DESTROY_DELAY: 60

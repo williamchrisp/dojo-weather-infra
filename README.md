@@ -1,5 +1,3 @@
-
-
 # William Chrisp Pathways Dojo Infra Node Weather App Infrastructure
 
 This repository is used in conjunction with the Contino Infra Engineer to Cloud Engineer Pathway course delivered in Contini-U. It is the main infrastructure half of the weather app and the app half is located in the following repository. 
@@ -12,24 +10,22 @@ It includes and supports the following functionality:
 
 <br> 
 
-
 ## Running Locally
 
 The provided `makefile`, `dockerfile` , and `docker-compose.yml` files work together to create a docker container which is used to run Terraform deployments and other supported commands. It expects AWS account credentials to be passed as environment variables.
 
 Please ensure the following variables are exported locally.
-if you are not using temporary credentials you do not require AWS_SESSION_TOKEN
+If you are not using temporary credentials you do not require AWS_SESSION_TOKEN
 ```
 export AWS_ACCESS_KEY_ID=
 export AWS_SECRET_ACCESS_KEY=
 export AWS_SESSION_TOKEN=
 ```
 
-To run a simple aws command, ensure you have set your *__aws temporary credentials__* in your local environment and run the following
+You can use the following commands
 
-```
-make list_bucket
-```
+### Terraform
+Terraform `init`, `validate` and `fmt` are run for each of the `make` commands below.
 
 Deploying Terraform environment locally - creates tfplan file during plan as input to apply. Apply is auto-approved.
 
@@ -44,9 +40,16 @@ Destroying Terraform environment locally. Destroy plan is speculative. Destroy a
 make run_destroy_plan
 make run_destroy_apply
 ```
-Terraform `init`, `validate` and `fmt` are run for each of the `make` commands above.
 
-For more information on 3 Musketeers deployment method, visit the official site here. https://3musketeers.io/
+### AWS
+
+To run a simple aws command, ensure you have set your in your local environment and run the following
+
+```
+make list_bucket
+```
+
+This is based off 3 Musketeers, for more information on 3 Musketeers deployment method, visit the official site here. https://3musketeers.io/
 
 <br> 
 
@@ -55,52 +58,44 @@ The following workflows are provided in this repository. These are located under
 
 | Workflow | Description | Environments | Trigger
 |----------|-------------|--------------|--------|
-| main.yml | Two step workflow to run a Terraform Plan and Terraform Apply following manual approvals. | approval | on.push.branch [master] ||
-| destroy.yml | Two step workflow to run a speculative Terraform Destroy Plan and Terraform Destroy following manual approvals. | approval | on.push.branch [destroy] ||
+| deploy.yml | This workflow will re trigger a deploy workflow in the app repository. This ensures that the app downstream will get all updates to the main infra. Actually deployments are protected by approvals in the app repository. | N/A | on.push.branch [master] |
 
-Note: Pushing to `master` branch will trigger Terraform (TF) deploy. You will also need to create a branch named `destroy` in your GitHub repository. Not required locally and only used for pull requests `master -> destroy` to trigger TF destroy workflow.
+Note: Pushing to `master` branch will trigger Terraform (TF) deploy.
 
 Additionally, ONLY changes to the following files and paths will trigger a workflow.
 
 ```
     paths:
-      - 'docker-compose.yml'
-      - 'Makefile'
-      - '.github/workflows/**'
-      - '*dockerfile'
       - 'modules/**'
       - '**.tf'
 ```
 
 <br>
 
-### main.yml workflow
-![Main Workflow](images/main.yml_workflow.png)
+### deploy.yml workflow
+![Deploy Workflow](images/deploy.yml_workflow.png)
 
 <br>
 
-### destroy.yml workflow
-![Destroy Workflow](images/destroy.yml_workflow.png)
-
-<br>
-
-Create an environment in your repository named `approval` to support GitHub Workflows, selecting `required reviewers` adding yourself as an approver.
-
-<br> 
-
-![GitHub Environment](images/github_environment.png)
+Pushing to master is not permitted and the current workflow is to create a branch and make a pull request with the new feature you want to add. Once this is approved and merged this will trigger the app repositories deploy workflow.
 
 <br> 
 
 ## GitHub Secrets
-Create GitHub Secrets in your repository for `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY` and `AWS_SESSION_TOKEN` if using temporary credentials. ONLY `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` required if you have configured an IAM user with programmatic access.
+The only secret the repository requires is a ACCESS_TOKEN. You are required to make one for this repo and add it to your repository secrets.
+https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token
+
+![Repository Secrets](images/repository_secrets.png)
 
 <br>
 
 ## Terraform IaC
-The Terraform environment is setup to get you started. This includes `providers.tf`, `meta.tf`, `variables.tf` and `main.tf` which leverages the `.tf` modules created in `modules/`. 
+The Terraform environment is includes the following `providers.tf`, `meta.tf`, `variables.tf` and `main.tf` which leverages the `.tf` modules created in `modules/`. 
 
-The `modules` folder allows you to organise your `.tf` files are called by `main.tf`.
+The `modules` folder organises the `.tf` files called by `main.tf`.
+
+<br>
+The following Inputs are located in the variables.tf file under the root folder. Adjusting the default values allows you edit the outcome of the terraform file. These will not be used unless you are deploying this stack locally or by itself.
 
 ### Inputs
 ---
@@ -131,6 +126,7 @@ The `modules` folder allows you to organise your `.tf` files are called by `main
 |------|-------------|
 | bucket_name | The name of the S3 Bucket. | |
 | bucket_name_arn | The ARN of the S3 Bucket. | |
+| vpc_id | VPC id required for applications using this module |
 
 
 </details>
@@ -139,6 +135,7 @@ The `modules` folder allows you to organise your `.tf` files are called by `main
 
 ### TF State Files
 AWS S3 is used to host the TF state files. This is hosted by s3://pathways-dojo, you can change this to whatever pre-created bucket. You will need to update the name of the state file in the `meta.tf` file replacing `williamchrisp` with your username.
+*`This will only be used when running locally`*
 
 ```
 terraform {

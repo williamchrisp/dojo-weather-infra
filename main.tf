@@ -28,6 +28,6 @@ output "bucket_name_arn" {
 }
 
 output "vpc_id" {
-  description = "VPC ID"
+  description = "VPC id required for applications using this module"
   value       = module.vpc.vpc_id
 }

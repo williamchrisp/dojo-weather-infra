@@ -28,7 +28,7 @@ jobs:
         -H "Authorization: Bearer ${{ secrets.ACCESS_TOKEN }}"
         https://api.github.com/repos/williamchrisp/dojo-weather-app/dispatches
         -d '{"event_type":"destroy","client_payload":{"destroy":true}}'
-    - name: Sleep for 30 seconds
+    - name: Sleep for a set amount of seconds
       run: sleep $APP_DESTROY_DELAY
 
   terraform_destroy_plan:

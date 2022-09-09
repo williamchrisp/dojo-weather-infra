@@ -10,21 +10,13 @@ on:
         required: true
         default: false
         type: boolean
+
+env:
+  APP_DESTROY_DELAY: 30
+  
 jobs:
 
-  terraform_destroy_plan:
-    runs-on: ubuntu-latest
-    env:
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      AWS_SESSION_TOKEN:  ${{ secrets.AWS_SESSION_TOKEN }} 
-    steps:
-    - uses: actions/checkout@v2
-    - name: Terraform_Destroy_Plan
-      run: make run_destroy_plan
-
   destroy_app:
-    needs: terraform_destroy_plan
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -36,19 +28,25 @@ jobs:
         -H "Authorization: Bearer ${{ secrets.ACCESS_TOKEN }}"
         https://api.github.com/repos/williamchrisp/dojo-weather-app/dispatches
         -d '{"event_type":"destroy","client_payload":{"destroy":true}}'
-    - name: Wait for build to succeed
-      if: ${{ inputs.destroy_app }}
-      uses: fountainhead/action-wait-for-check@v1.0.0
-      id: wait-for-build
-      with:
-        token: ${{ secrets.ACCESS_TOKEN }}
-        checkName: destroy
-        repo: dojo-weather-app
+    - name: Sleep for 30 seconds
+      run: sleep $APP_DESTROY_DELAY
+
+  terraform_destroy_plan:
+    needs: destroy_app
+    runs-on: ubuntu-latest
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_SESSION_TOKEN:  ${{ secrets.AWS_SESSION_TOKEN }} 
+    steps:
+    - uses: actions/checkout@v2
+    - name: Terraform_Destroy_Plan
+      run: make run_destroy_plan
 
   terraform_destroy_apply:
     environment:
       name: approval
-    needs: destroy_app
+    needs: terraform_destroy_plan
     runs-on: ubuntu-latest
     env:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}

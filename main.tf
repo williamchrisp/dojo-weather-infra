@@ -25,6 +25,6 @@ output "bucket_name_arn" {
 }
 
 output "vpc_id" {
-    description = "VPC ID"
-    value = aws_vpc.main.id
+  description = "VPC ID"
+  value       = module.vpc.vpc_id
 }

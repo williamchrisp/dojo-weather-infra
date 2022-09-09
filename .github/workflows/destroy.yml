@@ -1,4 +1,4 @@
-name: Destroy
+name: destroy
 on:
   push:
     branches:
@@ -10,12 +10,9 @@ on:
         required: true
         default: false
         type: boolean
-
 env:
   APP_DESTROY_DELAY: 60
-
 jobs:
-
   destroy_app:
     runs-on: ubuntu-latest
     steps:

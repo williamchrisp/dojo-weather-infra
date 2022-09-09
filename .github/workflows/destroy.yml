@@ -12,8 +12,8 @@ on:
         type: boolean
 
 env:
-  APP_DESTROY_DELAY: 30
-  
+  APP_DESTROY_DELAY: 60
+
 jobs:
 
   destroy_app:

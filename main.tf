@@ -10,6 +10,7 @@ module "s3_bucket" {
 module "vpc" {
   source          = "./modules/vpc"
   vpc_cidr        = var.vpc_cidr
+  subnet_availability_zones = var.subnet_availability_zones
   private_subnets = var.private_subnets
   public_subnets  = var.public_subnets
 

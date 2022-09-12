@@ -106,6 +106,7 @@ The following Inputs are located in the variables.tf file under the root folder.
 | Name | Description | Type | Default | Required |
 |------|-------------|:----:|:-----:|:-----:|
 | vpc_cidr | Specifies the cidr for the vpc | string | `"10.0.0.0/24"` | yes |
+| subnet_availability_zones | Availability Zones in which each subnet will lie. Order specifies subnet. | list(any) | `"us-east-1a", "us-east-1b", "us-east-1c"` | yes |
 | public_subnets | Specifies the public subnets in a list | list(any) | `"10.0.0.0/28", "10.0.0.16/28", "10.0.0.32/28"` | yes |
 | private_subnets | Specifies the private subnets in a list | list(any) | `"10.0.0.64/26", "10.0.0.128/26", "10.0.0.192/26"` | yes |
 | bucket | S3 bucket name - must be globally unique | string | `"williamdojoapp"` | yes |

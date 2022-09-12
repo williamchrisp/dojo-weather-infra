@@ -6,9 +6,9 @@ variable "vpc_cidr" {
 }
 
 variable "subnet_availability_zones" {
-  type = list(any)
+  type        = list(any)
   description = "Availability Zones in which each subnet will lie. Order specifies subnet."
-  default = [ "us-east-1a", "us-east-1b", "us-east-1c" ]
+  default     = ["us-east-1a", "us-east-1b", "us-east-1c"]
 }
 
 variable "public_subnets" {

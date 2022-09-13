@@ -58,11 +58,13 @@ The following workflows are provided in this repository. These are located under
 
 | Workflow | Description | Environments | Trigger
 |----------|-------------|--------------|--------|
-| deploy.yml | This workflow will re trigger a deploy workflow in the app repository. This ensures that the app downstream will get all updates to the main infra. Actually deployments are protected by approvals in the app repository. | N/A | on.push.branch [master] |
+| build.yml | This workflow will build the VPC infrastructure from scratch using the make commands `terraform_plan, terraform_apply, push_app.` You can also initiate the application build from here to. | approval | [workflow_dispatch](https://docs.github.com/en/actions/managing-workflow-runs/manually-running-a-workflow)  |
+| destroy.yml | This workflow will destroy the VPC infrastructure using the make commands `terraform_destroy_plan, terraform_destroy_apply.` You can initiate the application build process from here to.| approval | [workflow_dispatch](https://docs.github.com/en/actions/managing-workflow-runs/manually-running-a-workflow) or merge with `destroy` branch|
+| deploy.yml | This workflow will update the VPC infrastructure terraform stack using the make commands `terraform_plan, terraform_apply`| approval | on push |
 
 Note: Pushing to `master` branch will trigger Terraform (TF) deploy.
 
-Additionally, ONLY changes to the following files and paths will trigger a workflow.
+Additionally, ONLY changes to the following files and paths will trigger the deploy workflow.
 
 ```
     paths:
@@ -72,17 +74,30 @@ Additionally, ONLY changes to the following files and paths will trigger a workf
 
 <br>
 
+### build.yml workflow
+![Build Workflow](images/build.yml_workflow.png)
+
+### destroy.yml workflow
+![Destroy Workflow](images/destroy.yml_workflow.png)
+
 ### deploy.yml workflow
 ![Deploy Workflow](images/deploy.yml_workflow.png)
 
 <br>
 
-Pushing to master is not permitted and the current workflow is to create a branch and make a pull request with the new feature you want to add. Once this is approved and merged this will trigger the app repositories deploy workflow.
+Pushing to master is not permitted and the current workflow is to create a branch and make a pull request with the new feature you want to add. Once this is approved and merged this will trigger the deploy workflow.
 
 <br> 
 
 ## GitHub Secrets
-The only secret the repository requires is a ACCESS_TOKEN. You are required to make one for this repo and add it to your repository secrets.
+The following github secrets are required
+```
+AWS_ACCESS_KEY_ID 
+AWS_SECRET_ACCESS_KEY
+AWS_SESSION_TOKEN
+ACCESS_TOKEN
+```
+The Access token is required for action to track the status of other actions. You can follow this to create your own.
 https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token
 
 ![Repository Secrets](images/repository_secrets.png)
@@ -95,13 +110,13 @@ The Terraform environment is includes the following `providers.tf`, `meta.tf`, `
 The `modules` folder organises the `.tf` files called by `main.tf`.
 
 <br>
-The following Inputs are located in the variables.tf file under the root folder. Adjusting the default values allows you edit the outcome of the terraform file. These will not be used unless you are deploying this stack locally or by itself.
 
 ### Inputs
 ---
 <details open>
   <summary>Click to expand</summary>
 
+The following Inputs are located in the variables.tf file under the root folder. Adjusting the default values allows you edit the outcome of the terraform file.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|:----:|:-----:|:-----:|
@@ -111,7 +126,6 @@ The following Inputs are located in the variables.tf file under the root folder.
 | private_subnets | Specifies the private subnets in a list | list(any) | `"10.0.0.64/26", "10.0.0.128/26", "10.0.0.192/26"` | yes |
 | bucket | S3 bucket name - must be globally unique | string | `"williamdojoapp"` | yes |
 | tags | Tags to be applied to AWS resources| map(string) | `Owner   = "williamchrisp", Project = "node-weather-app"` | yes |
-
 
 </details>
 
@@ -125,13 +139,8 @@ The following Inputs are located in the variables.tf file under the root folder.
 
 | Name | Description |
 |------|-------------|
-| bucket_name | The name of the S3 Bucket. | |
-| bucket_name_arn | The ARN of the S3 Bucket. | |
-| vpc_id | VPC id required for applications using this module |
-| subnet_availability_zones | Availability Zones in which each subnet will lie. Order specifies subnet. |
-| public_subnets | Specifies the public subnets in a list. Order specifies AZ |
-| private_subnets | Specifies the private subnets in a list. Order specifies AZ |
-
+| bucket_name | The name of the S3 Bucket. |
+| bucket_name_arn | The ARN of the S3 Bucket. |
 
 </details>
 
@@ -139,7 +148,6 @@ The following Inputs are located in the variables.tf file under the root folder.
 
 ### TF State Files
 AWS S3 is used to host the TF state files. This is hosted by s3://pathways-dojo, you can change this to whatever pre-created bucket. You will need to update the name of the state file in the `meta.tf` file replacing `williamchrisp` with your username.
-*`This will only be used when running locally`*
 
 ```
 terraform {

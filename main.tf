@@ -27,23 +27,3 @@ output "bucket_name_arn" {
   description = "The name of the bucket"
   value       = ["${module.s3_bucket.s3_bucket_name_arn}"]
 }
-
-output "vpc_id" {
-  description = "VPC id required for applications using this module"
-  value       = module.vpc.vpc_id
-}
-
-output "subnet_availability_zones" {
-  description = "Availability Zones in which each subnet will lie. Order specifies subnet."
-  value       = var.subnet_availability_zones
-}
-
-output "public_subnets" {
-  description = "Specifies the public subnets in a list. Order specifies AZ"
-  value       = var.public_subnets
-}
-
-output "private_subnets" {
-  description = "Specifies the private subnets in a list. Order specifies AZ"
-  value       = var.private_subnets
-}

@@ -1,11 +1,12 @@
-name: deploy
+name: build
 on:
-  push:
-    branches:
-      - master
-    paths:
-      - 'modules/**'
-      - '**.tf'
+  workflow_dispatch:
+    inputs:
+      build_app:
+        description: "Build the Weather app terraform stack aswell."
+        required: true
+        default: false
+        type: boolean
 jobs:
   terraform_plan:
     runs-on: ubuntu-latest
@@ -34,9 +35,10 @@ jobs:
     - name: Terraform_Apply
       run: make run_apply  
 
-  update_app:
+  build_app:
     needs: terraform_apply
     runs-on: ubuntu-latest
+    if: ${{ inputs.build_app }}
     steps:
     - uses: actions/checkout@v2
     - name: Initiate build in app repo
@@ -45,5 +47,4 @@ jobs:
         -H "Accept: application/vnd.github.v3+json"
         -H "Authorization: Bearer ${{ secrets.ACCESS_TOKEN }}"
         https://api.github.com/repos/williamchrisp/dojo-weather-app/dispatches
-        -d '{"event_type":"deploy","client_payload":{"deploy":true}}'
-  
+        -d '{"event_type":"build","client_payload":{"build":true}}'
